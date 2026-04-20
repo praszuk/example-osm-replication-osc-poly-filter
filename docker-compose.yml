@@ -1,0 +1,33 @@
+services:
+  db:
+    restart: always
+    image: "postgis/postgis:18-3.6"
+    ports:
+    - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    command: -p ${POSTGRES_PORT}
+    volumes:
+      - db_data:/var/lib/postgresql
+      - ./postgis/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+
+  import:
+    # https://hub.docker.com/r/praszuk/osm-replication-osc-poly-filter
+    # image: praszuk/osm-replication-osc-poly-filter:latest
+    image: praszuk/osm-replication-osc-poly-filter:1.0-osm2pgsql-2.2.0
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_HOST: "${POSTGRES_HOST}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      PGPASSWORD: "${POSTGRES_PASSWORD}"
+    volumes:
+      - ./data:/data
+      - ./schemas:/schemas
+
+volumes:
+  db_data:
