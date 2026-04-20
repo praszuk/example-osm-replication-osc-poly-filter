@@ -1,0 +1,11 @@
+.*
+!.gitignore
+!.gitkeep
+!.pre-commit-config.yaml
+!.github
+*.pbf
+*.poly
+*.osc
+*.osc.gz
+*.state
+*.state.tmp
