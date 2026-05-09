@@ -4,11 +4,8 @@ services:
     image: "postgis/postgis:18-3.6"
     ports:
     - "${POSTGRES_PORT}:${POSTGRES_PORT}"
-    environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_PORT: "${POSTGRES_PORT}"
-      POSTGRES_DB: "${POSTGRES_DB}"
+    env_file:
+      - .env
     command: -p ${POSTGRES_PORT}
     volumes:
       - db_data:/var/lib/postgresql
@@ -17,13 +14,10 @@ services:
   import:
     # https://hub.docker.com/r/praszuk/osm-replication-osc-poly-filter
     # image: praszuk/osm-replication-osc-poly-filter:latest
-    image: praszuk/osm-replication-osc-poly-filter:1.0-osm2pgsql-2.2.0
+    image: praszuk/osm-replication-osc-poly-filter:2.0-osm2pgsql-2.2.0
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_HOST: "${POSTGRES_HOST}"
-      POSTGRES_PORT: "${POSTGRES_PORT}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DB}"
       PGPASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
       - ./data:/data
